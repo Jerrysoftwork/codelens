@@ -8,6 +8,7 @@ export default function App() {
   const [array, setArray] = useState(generateArray());
   const [comparing, setComparing] = useState([]);
   const [isSorting, setIsSorting] = useState(false);
+  const [speed, setSpeed] = useState(200); // default speed in ms
 
   const handleGenerate = () => {
     if (!isSorting) setArray(generateArray());
@@ -21,7 +22,7 @@ export default function App() {
       const { array: newArr, comparing } = steps[i];
       setArray(newArr);
       setComparing(comparing);
-      await new Promise((resolve) => setTimeout(resolve, 200)); // speed
+      await new Promise((resolve) => setTimeout(resolve, speed)); // use slider speed
     }
 
     setComparing([]);
@@ -34,22 +35,13 @@ export default function App() {
         CodeLens – Algorithm Visualizer
       </h1>
 
-      <div className="flex items-center justify-center gap-4 p-4">
-        <button
-          onClick={handleGenerate}
-          className="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
-          disabled={isSorting}
-        >
-          Generate New Array
-        </button>
-        <button
-          onClick={handleSort}
-          className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
-          disabled={isSorting}
-        >
-          Bubble Sort
-        </button>
-      </div>
+      <ControlPanel
+        onGenerate={handleGenerate}
+        onSort={handleSort}
+        speed={speed}
+        setSpeed={setSpeed}
+        isSorting={isSorting}
+      />
 
       <ArrayBars array={array} comparing={comparing} />
     </div>
