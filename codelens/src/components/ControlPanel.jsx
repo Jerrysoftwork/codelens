@@ -5,6 +5,8 @@ const ControlPanel = ({
   setAlgorithm,
   speed,
   setSpeed,
+  size,
+  setSize,
   resetArray,
   handleSort,
   isSorting,
@@ -40,6 +42,22 @@ const ControlPanel = ({
           className="cursor-pointer"
         />
         <span className="ml-2">{speed} ms</span>
+      </div>
+
+      {/* Size Slider */}
+      <div>
+        <label className="mr-2 font-medium">Size:</label>
+        <input
+          type="range"
+          min="5"
+          max="50"
+          step="1"
+          value={size}
+          onChange={(e) => setSize(Number(e.target.value))}
+          disabled={isSorting}
+          className="cursor-pointer"
+        />
+        <span className="ml-2">{size} bars</span>
       </div>
 
       {/* Buttons */}

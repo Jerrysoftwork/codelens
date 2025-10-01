@@ -6,6 +6,7 @@ import { quickSort } from "./algorithms/quickSort";
 import { mergeSort } from "./algorithms/mergeSort";
 
 function App() {
+  const [size, setSize] = useState(20); // NEW: size of array
   const [array, setArray] = useState(generateArray(20));
   const [speed, setSpeed] = useState(200);
   const [isSorting, setIsSorting] = useState(false);
@@ -20,7 +21,7 @@ function App() {
   }
 
   const resetArray = () => {
-    setArray(generateArray(20));
+    setArray(generateArray(size)); // use current size
     setSorted([]);
     setComparing([]);
   };
@@ -53,6 +54,8 @@ function App() {
         setAlgorithm={setAlgorithm}
         speed={speed}
         setSpeed={setSpeed}
+        size={size}
+        setSize={setSize}
         resetArray={resetArray}
         handleSort={handleSort}
         isSorting={isSorting}
