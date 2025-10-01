@@ -1,37 +1,55 @@
-export default function ControlPanel({ onGenerate, onSort, speed, setSpeed, isSorting }) {
+export default function ControlPanel({
+  onGenerate,
+  onSort,
+  speed,
+  setSpeed,
+  isSorting,
+  algorithm,
+  setAlgorithm,
+}) {
   return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Buttons */}
-      <div className="flex gap-4 flex-wrap justify-center">
-        <button
-          onClick={onGenerate}
-          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
-          disabled={isSorting}
-        >
-          Generate New Array
-        </button>
-        <button
-          onClick={onSort}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          disabled={isSorting}
-        >
-          Bubble Sort
-        </button>
-      </div>
+    <div className="flex items-center justify-center gap-6 p-4 bg-gray-800 shadow-md">
+      <button
+        onClick={onGenerate}
+        disabled={isSorting}
+        className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+      >
+        Generate New Array
+      </button>
 
-      {/* Speed Slider */}
-      <div className="flex flex-col items-center">
-        <label className="text-gray-700 mb-1">Speed: {speed} ms</label>
+      <button
+        onClick={onSort}
+        disabled={isSorting}
+        className="px-4 py-2 bg-green-600 rounded hover:bg-green-700 disabled:opacity-50"
+      >
+        Sort
+      </button>
+
+      <div>
+        <label className="mr-2">Speed:</label>
         <input
           type="range"
           min="50"
           max="1000"
           step="50"
           value={speed}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          className="w-64"
           disabled={isSorting}
+          onChange={(e) => setSpeed(Number(e.target.value))}
         />
+      </div>
+
+      <div>
+        <label className="mr-2">Algorithm:</label>
+        <select
+          value={algorithm}
+          disabled={isSorting}
+          onChange={(e) => setAlgorithm(e.target.value)}
+          className="bg-gray-700 px-2 py-1 rounded"
+        >
+          <option value="bubble">Bubble Sort</option>
+          <option value="quick">Quick Sort</option>
+          <option value="merge">Merge Sort</option>
+        </select>
       </div>
     </div>
   );
