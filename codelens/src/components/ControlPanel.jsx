@@ -1,56 +1,65 @@
-export default function ControlPanel({
-  onGenerate,
-  onSort,
-  speed,
-  setSpeed,
-  isSorting,
+import React from "react";
+
+const ControlPanel = ({
   algorithm,
   setAlgorithm,
-}) {
+  speed,
+  setSpeed,
+  resetArray,
+  handleSort,
+  isSorting,
+}) => {
   return (
-    <div className="flex items-center justify-center gap-6 p-4 bg-gray-800 shadow-md">
-      <button
-        onClick={onGenerate}
-        disabled={isSorting}
-        className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
-      >
-        Generate New Array
-      </button>
-
-      <button
-        onClick={onSort}
-        disabled={isSorting}
-        className="px-4 py-2 bg-green-600 rounded hover:bg-green-700 disabled:opacity-50"
-      >
-        Sort
-      </button>
-
+    <div className="flex flex-wrap justify-center gap-4 bg-white p-4 rounded shadow-md">
+      {/* Algorithm Selector */}
       <div>
-        <label className="mr-2">Speed:</label>
-        <input
-          type="range"
-          min="50"
-          max="1000"
-          step="50"
-          value={speed}
-          disabled={isSorting}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-        />
-      </div>
-
-      <div>
-        <label className="mr-2">Algorithm:</label>
+        <label className="mr-2 font-medium">Algorithm:</label>
         <select
           value={algorithm}
-          disabled={isSorting}
           onChange={(e) => setAlgorithm(e.target.value)}
-          className="bg-gray-700 px-2 py-1 rounded"
+          className="p-2 border rounded"
+          disabled={isSorting}
         >
           <option value="bubble">Bubble Sort</option>
           <option value="quick">Quick Sort</option>
           <option value="merge">Merge Sort</option>
         </select>
       </div>
+
+      {/* Speed Slider */}
+      <div>
+        <label className="mr-2 font-medium">Speed:</label>
+        <input
+          type="range"
+          min="50"
+          max="1000"
+          step="50"
+          value={speed}
+          onChange={(e) => setSpeed(Number(e.target.value))}
+          disabled={isSorting}
+          className="cursor-pointer"
+        />
+        <span className="ml-2">{speed} ms</span>
+      </div>
+
+      {/* Buttons */}
+      <button
+        onClick={resetArray}
+        disabled={isSorting}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        Generate New
+      </button>
+
+      <button
+        onClick={handleSort}
+        disabled={isSorting}
+        className="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        Sort
+      </button>
     </div>
   );
-}
+};
+
+export default ControlPanel;
