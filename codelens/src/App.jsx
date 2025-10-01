@@ -5,29 +5,30 @@ import { bubbleSort } from "./algorithms/bubbleSort";
 import { quickSort } from "./algorithms/quickSort";
 import { mergeSort } from "./algorithms/mergeSort";
 
-export default function App() {
+function App() {
   const [array, setArray] = useState(generateArray(20));
-  const [speed, setSpeed] = useState(300);
+  const [speed, setSpeed] = useState(200);
   const [isSorting, setIsSorting] = useState(false);
   const [comparing, setComparing] = useState([]);
   const [sorted, setSorted] = useState([]);
-  const [algorithm, setAlgorithm] = useState("bubble"); // default algorithm
+  const [algorithm, setAlgorithm] = useState("bubble");
 
   function generateArray(size) {
     return Array.from({ length: size }, () =>
-      Math.floor(Math.random() * 100) + 10
+      Math.floor(Math.random() * 50) + 5
     );
   }
 
-  const regenerateArray = () => {
-    if (isSorting) return;
+  const resetArray = () => {
     setArray(generateArray(20));
     setSorted([]);
+    setComparing([]);
   };
 
   const handleSort = async () => {
     setIsSorting(true);
-    setSorted([]); // reset
+    setSorted([]);
+    setComparing([]);
 
     if (algorithm === "bubble") {
       await bubbleSort(array, setArray, speed, setComparing, setSorted);
@@ -41,24 +42,30 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
-      <header className="p-4 text-2xl font-bold text-center bg-gray-800 shadow">
+    <div className="min-h-screen bg-gray-100 p-6 flex flex-col gap-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800">
         CodeLens – Algorithm Visualizer
-      </header>
+      </h1>
 
+      {/* Control Panel */}
       <ControlPanel
-        onGenerate={regenerateArray}
-        onSort={handleSort}
-        speed={speed}
-        setSpeed={setSpeed}
-        isSorting={isSorting}
         algorithm={algorithm}
         setAlgorithm={setAlgorithm}
+        speed={speed}
+        setSpeed={setSpeed}
+        resetArray={resetArray}
+        handleSort={handleSort}
+        isSorting={isSorting}
       />
 
-      <main className="flex-1 flex items-center justify-center p-6">
-        <Chart array={array} comparing={comparing} sorted={sorted} />
-      </main>
+      {/* Chart */}
+      <div className="flex justify-center mt-6">
+        <div className="w-full max-w-4xl">
+          <Chart array={array} comparing={comparing} sorted={sorted} />
+        </div>
+      </div>
     </div>
   );
 }
+
+export default App;
