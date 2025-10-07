@@ -3,70 +3,98 @@ import ControlPanel from "./components/ControlPanel";
 import Chart from "./components/Chart";
 import { bubbleSort } from "./algorithms/bubbleSort";
 import { quickSort } from "./algorithms/quickSort";
-import { mergeSort } from "./algorithms/mergeSort";
+import { bubbleSortSteps } from "./algorithms/bubbleSortSteps";
+import { quickSortSteps } from "./algorithms/quickSortSteps";
 
 function App() {
-  const [size, setSize] = useState(20); // NEW: size of array
   const [array, setArray] = useState(generateArray(20));
   const [speed, setSpeed] = useState(200);
-  const [isSorting, setIsSorting] = useState(false);
   const [comparing, setComparing] = useState([]);
   const [sorted, setSorted] = useState([]);
+  const [isSorting, setIsSorting] = useState(false);
   const [algorithm, setAlgorithm] = useState("bubble");
 
+  // Step mode state
+  const [isStepMode, setIsStepMode] = useState(false);
+  const [steps, setSteps] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+
   function generateArray(size) {
-    return Array.from({ length: size }, () =>
-      Math.floor(Math.random() * 50) + 5
-    );
+    return Array.from({ length: size }, () => Math.floor(Math.random() * 50) + 5);
   }
 
-  const resetArray = () => {
-    setArray(generateArray(size)); // use current size
-    setSorted([]);
+  const handleGenerate = () => {
+    if (isSorting) return;
+    setArray(generateArray(20));
     setComparing([]);
+    setSorted([]);
+    setSteps([]);
+    setCurrentStep(0);
+    setIsStepMode(false);
   };
 
   const handleSort = async () => {
     setIsSorting(true);
     setSorted([]);
-    setComparing([]);
 
     if (algorithm === "bubble") {
       await bubbleSort(array, setArray, speed, setComparing, setSorted);
     } else if (algorithm === "quick") {
       await quickSort(array, setArray, speed, setComparing, setSorted);
-    } else if (algorithm === "merge") {
-      await mergeSort(array, setArray, speed, setComparing, setSorted);
     }
 
     setIsSorting(false);
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col gap-6">
-      <h1 className="text-3xl font-bold text-center text-gray-800">
-        CodeLens – Algorithm Visualizer
-      </h1>
+  const handleStepMode = () => {
+    setIsStepMode(true);
+    setSteps([]);
+    setCurrentStep(0);
 
-      {/* Control Panel */}
+    let stepList = [];
+
+    if (algorithm === "bubble") {
+      stepList = bubbleSortSteps(array);
+    } else if (algorithm === "quick") {
+      stepList = quickSortSteps(array);
+    }
+
+    setSteps(stepList);
+
+    if (stepList.length > 0) {
+      setArray(stepList[0].array);
+      setComparing(stepList[0].comparing);
+      setSorted(stepList[0].sorted);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (!isStepMode || steps.length === 0) return;
+    const nextIndex = currentStep + 1;
+    if (nextIndex < steps.length) {
+      setCurrentStep(nextIndex);
+      setArray(steps[nextIndex].array);
+      setComparing(steps[nextIndex].comparing);
+      setSorted(steps[nextIndex].sorted);
+    }
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold text-center">CodeLens – Algorithm Visualizer</h1>
       <ControlPanel
-        algorithm={algorithm}
-        setAlgorithm={setAlgorithm}
+        onGenerate={handleGenerate}
+        onSort={handleSort}
+        onStepMode={handleStepMode}
+        onNextStep={handleNextStep}
+        isSorting={isSorting}
+        isStepMode={isStepMode}
         speed={speed}
         setSpeed={setSpeed}
-        size={size}
-        setSize={setSize}
-        resetArray={resetArray}
-        handleSort={handleSort}
-        isSorting={isSorting}
+        algorithm={algorithm}
+        setAlgorithm={setAlgorithm}
       />
-
-      {/* Chart */}
-      <div className="flex justify-center mt-6">
-        <div className="w-full max-w-4xl">
-          <Chart array={array} comparing={comparing} sorted={sorted} />
-        </div>
-      </div>
+      <Chart array={array} comparing={comparing} sorted={sorted} />
     </div>
   );
 }
