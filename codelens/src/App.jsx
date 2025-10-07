@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ControlPanel from "./components/ControlPanel";
-import Chart from "./components/Chart";
+import Chart from "./components/chart";
 import { bubbleSort } from "./algorithms/bubbleSort";
 import { quickSort } from "./algorithms/quickSort";
 import { bubbleSortSteps } from "./algorithms/bubbleSortSteps";
